@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h2>Welcome, Staff</h2>
+    <h3>Doctors</h3>
+    <table>
+        <tr><th>ID</th><th>Name</th><th>Specialization</th></tr>
+        {% for doc in doctors %}
+            <tr>
+                <td>{{ doc['doctor_id'] }}</td>
+                <td>{{ doc['name'] }}</td>
+                <td>{{ doc['specialization'] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <h3>Patients</h3>
+    <table>
+        <tr><th>ID</th><th>Name</th><th>Age</th></tr>
+        {% for pat in patients %}
+            <tr>
+                <td>{{ pat['patient_id'] }}</td>
+                <td>{{ pat['name'] }}</td>
+                <td>{{ pat['age'] }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="/logout">Logout</a>
+</body>
+</html>

@@ -1,44 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Records / Prescriptions</title>
-    <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .Pending { background-color: #fff3cd; }      /* Yellow */
-        .Completed { background-color: #d4edda; }    /* Green */
-        .Cancelled { background-color: #f8d7da; }    /* Red */
-        a.button { text-decoration: none; color: white; background-color: #007bff; padding: 5px 10px; border-radius: 4px; }
-        a.button:hover { background-color: #0056b3; }
-    </style>
+    <meta charset="UTF-8">
+    <title>Medical Records</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<h1>Records / Prescriptions</h1>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Patient</th>
-        <th>Diagnosis</th>
-        <th>Treatment</th>
-        <th>Prescription</th>
-        <th>Date</th>
-        <th>Status</th>
-        <th>PDF</th>
-    </tr>
-    {% for record in records %}
-    <tr class="{{ record['status'] }}">
-        <td>{{ record['record_id'] }}</td>
-        <td>{{ record['patient_name'] }}</td>
-        <td>{{ record['diagnosis'] }}</td>
-        <td>{{ record['treatment'] }}</td>
-        <td>{{ record['prescription'] }}</td>
-        <td>{{ record['date'] }}</td>
-        <td>{{ record['status'] }}</td>
-        <td><a class="button" href="/records/pdf/{{ record['record_id'] }}">Download PDF</a></td>
-    </tr>
-    {% endfor %}
-</table>
-<a href="/">Back to Dashboard</a>
+    <header>
+        <h1>Medical Records</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('patients') }}">Patients</a>
+            <a href="{{ url_for('doctors') }}">Doctors</a>
+            <a href="{{ url_for('appointments') }}">Appointments</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Patient Medical Records</h2>
+        <table>
+            <tr>
+                <th>ID</th><th>Patient</th><th>Diagnosis</th><th>Treatment</th><th>Date</th>
+            </tr>
+            {% for row in records %}
+            <tr>
+                <td>{{ row['record_id'] }}</td>
+                <td>{{ row['patient_name'] }}</td>
+                <td>{{ row['diagnosis'] }}</td>
+                <td>{{ row['treatment'] }}</td>
+                <td>{{ row['record_date'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
 </body>
 </html>
+

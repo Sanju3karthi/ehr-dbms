@@ -1,79 +1,49 @@
-/* General body styling */
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f9f9f9;
-    color: #333;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(120deg, #f6fafd 0%, #dbe7fb 100%);
+    color: #222e3c;
 }
-
-/* Headings */
-h1 {
-    color: #2c3e50;
-}
-
-/* Tables */
 table {
-    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    margin-top: 24px;
+    box-shadow: 0px 2px 8px rgba(0,32,90,0.05);
     width: 100%;
-    margin-bottom: 20px;
+    border-collapse: collapse;
 }
-
 th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
+    padding: 13px 12px;
     text-align: left;
 }
-
 th {
-    background-color: #2c3e50;
-    color: white;
+    background: #f0f3f8;
+    color: #263159;
+}
+tr { border-bottom: 1px solid #e4ebf7; }
+tr:last-child { border-bottom: none; }
+
+a { color: #1b6ca8; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+input, button {
+    font-family: inherit;
+    margin: 6px 0;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #bbc9e3;
 }
 
-/* Status color coding */
-.Pending {
-    background-color: #fff3cd; /* Yellow */
-}
-.Completed {
-    background-color: #d4edda; /* Green */
-}
-.Cancelled {
-    background-color: #f8d7da; /* Red */
-}
-
-/* Links and buttons */
-a {
-    color: #007bff;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-a.button {
-    text-decoration: none;
-    color: white;
-    background-color: #007bff;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
-
-a.button:hover {
-    background-color: #0056b3;
-}
-
-/* Navigation links */
-ul {
-    list-style: none;
-    padding: 0;
-}
-
-ul li {
-    display: inline;
-    margin-right: 15px;
-}
-
-ul li a {
+button {
+    background: #263159;
+    color: #fff;
+    border: none;
     font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    background: #1b6ca8;
 }

@@ -1,9 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Flask Test Index</title>
+    <title>EHR Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <h1>Flask is Working!</h1>
+<div class="dashboard-container">
+    <nav class="sidebar">
+        <h2>health<span style="color:#ffc436">matrix</span></h2>
+        <ul>
+            <li><a class="active" href="/">Dashboard</a></li>
+            <li><a href="/patients">Patients</a></li>
+            <li><a href="/doctors">Doctors</a></li>
+            <li><a href="/appointments">Appointments</a></li>
+            <li><a href="/records">Records / Prescriptions</a></li>
+        </ul>
+    </nav>
+    <main class="main-content">
+        <!-- Example dashboard cards -->
+        <div class="cards">
+            <div class="card">
+                <div class="card-title">Waiting Patients</div>
+                <div class="card-value">17</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Attended Patients</div>
+                <div class="card-value">25</div>
+            </div>
+            <!-- More cards -->
+        </div>
+
+        <!-- Place your table or main content below -->
+    </main>
+</div>
 </body>
 </html>

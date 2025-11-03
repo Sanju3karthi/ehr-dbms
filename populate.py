@@ -1,76 +1,114 @@
 import sqlite3
-from faker import Faker
 import random
 
-fake = Faker()
-
-# Connect to SQLite
-conn = sqlite3.connect('ehr1.db')
+# Connect to ehr1.db
+conn = sqlite3.connect("ehr1.db")
 cursor = conn.cursor()
 
-status_options = ['Pending', 'Completed', 'Cancelled']
+# --- Drop existing tables (optional clean start) ---
+cursor.execute("DROP TABLE IF EXISTS users;")
+cursor.execute("DROP TABLE IF EXISTS patients;")
+cursor.execute("DROP TABLE IF EXISTS doctors;")
+cursor.execute("DROP TABLE IF EXISTS appointments;")
+cursor.execute("DROP TABLE IF EXISTS records;")
 
-# Insert 50 patients
-for _ in range(50):
+# --- Create tables ---
+cursor.execute("""
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    password TEXT,
+    role TEXT
+);
+""")
+
+cursor.execute("""
+CREATE TABLE patients (
+    patient_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    age INTEGER,
+    gender TEXT,
+    contact TEXT
+);
+""")
+
+cursor.execute("""
+CREATE TABLE doctors (
+    doctor_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    specialization TEXT,
+    contact TEXT
+);
+""")
+
+cursor.execute("""
+CREATE TABLE appointments (
+    appointment_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    patient_id INTEGER,
+    doctor_id INTEGER,
+    date TEXT,
+    time TEXT,
+    status TEXT,
+    FOREIGN KEY(patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY(doctor_id) REFERENCES doctors(doctor_id)
+);
+""")
+
+cursor.execute("""
+CREATE TABLE records (
+    record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    patient_id INTEGER,
+    doctor_id INTEGER,
+    diagnosis TEXT,
+    prescription TEXT,
+    date TEXT,
+    FOREIGN KEY(patient_id) REFERENCES patients(patient_id),
+    FOREIGN KEY(doctor_id) REFERENCES doctors(doctor_id)
+);
+""")
+
+# --- Users ---
+users = [
+    ('admin', 'admin123', 'staff'),
+    ('drjohn', 'doc123', 'doctor'),
+    ('patient1', 'pat123', 'patient')
+]
+cursor.executemany("INSERT INTO users (username, password, role) VALUES (?, ?, ?);", users)
+
+# --- Doctors (50 entries) ---
+specializations = ['Cardiology', 'Neurology', 'Orthopedics', 'Pediatrics', 'Dermatology']
+for i in range(1, 51):
+    name = f"Doctor_{i}"
+    specialization = specializations[i % 5]
+    contact = f"999999{i:03d}"
+    cursor.execute("INSERT INTO doctors (name, specialization, contact) VALUES (?, ?, ?);",
+                   (name, specialization, contact))
+
+# --- Patients (50 entries) ---
+for i in range(1, 51):
+    name = f"Patient_{i}"
+    age = random.randint(20, 60)
+    gender = "Male" if i % 2 == 0 else "Female"
+    contact = f"888888{i:03d}"
+    cursor.execute("INSERT INTO patients (name, age, gender, contact) VALUES (?, ?, ?, ?);",
+                   (name, age, gender, contact))
+
+# --- Appointments (100 entries) ---
+statuses = ['Waiting', 'Attended', 'Cancelled']
+for i in range(1, 101):
+    patient_id = (i % 50) + 1
+    doctor_id = (i % 50) + 1
+    date = f"2025-11-{(i % 28) + 1:02d}"
+    time = f"{(i % 8) + 9:02d}:00"
+    status = statuses[i % 3]
     cursor.execute("""
-        INSERT INTO patients (name, age, gender, address, phone, email)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (
-        fake.name(),
-        random.randint(1, 90),
-        random.choice(['Male', 'Female']),
-        fake.address().replace('\n', ', '),
-        fake.phone_number(),
-        fake.email()
-    ))
+        INSERT INTO appointments (patient_id, doctor_id, date, time, status)
+        VALUES (?, ?, ?, ?, ?);
+    """, (patient_id, doctor_id, date, time, status))
 
-# Insert 50 doctors
-specializations = ['Cardiology', 'Neurology', 'Dermatology', 'Pediatrics', 'Orthopedics', 'General Medicine', 'ENT', 'Ophthalmology']
-for _ in range(50):
-    cursor.execute("""
-        INSERT INTO doctors (name, specialization, phone, email)
-        VALUES (?, ?, ?, ?)
-    """, (
-        fake.name(),
-        random.choice(specializations),
-        fake.phone_number(),
-        fake.email()
-    ))
-
-# Insert 100 appointments with status
-for _ in range(100):
-    cursor.execute("""
-        INSERT INTO appointments (patient_id, doctor_id, date, time, reason, status)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (
-        random.randint(1, 50),
-        random.randint(1, 50),
-        fake.date_between(start_date='-1y', end_date='+1y').isoformat(),
-        fake.time(pattern="%H:%M"),
-        fake.sentence(nb_words=5),
-        random.choice(status_options)
-    ))
-
-# Insert 100 records/prescriptions with status
-diagnoses = ['Hypertension', 'Diabetes', 'Migraine', 'Flu', 'Eczema', 'Arthritis', 'Asthma', 'Allergy']
-treatments = ['Medication', 'Therapy', 'Surgery', 'Lifestyle changes', 'Observation', 'Diet changes']
-prescriptions = ['Drug A', 'Drug B', 'Drug C', 'Drug D', 'Drug E']
-
-for _ in range(100):
-    cursor.execute("""
-        INSERT INTO records (patient_id, diagnosis, treatment, prescription, date, status)
-        VALUES (?, ?, ?, ?, ?, ?)
-    """, (
-        random.randint(1, 50),
-        random.choice(diagnoses),
-        random.choice(treatments),
-        random.choice(prescriptions),
-        fake.date_between(start_date='-1y', end_date='+1y').isoformat(),
-        random.choice(status_options)
-    ))
-
-# Commit and close
+# --- Commit and close ---
 conn.commit()
 conn.close()
 
-print("Database populated with status for appointments and records!")
+print("✅ Database 'ehr1.db' created and populated successfully with sample data!")
+

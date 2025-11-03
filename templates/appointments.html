@@ -1,41 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Appointments</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        .Pending { background-color: #fff3cd; }      /* Yellow */
-        .Completed { background-color: #d4edda; }    /* Green */
-        .Cancelled { background-color: #f8d7da; }    /* Red */
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<h1>Appointments</h1>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Patient</th>
-        <th>Doctor</th>
-        <th>Date</th>
-        <th>Time</th>
-        <th>Reason</th>
-        <th>Status</th>
-    </tr>
-    {% for appointment in appointments %}
-    <tr class="{{ appointment['status'] }}">
-        <td>{{ appointment['appointment_id'] }}</td>
-        <td>{{ appointment['patient_name'] }}</td>
-        <td>{{ appointment['doctor_name'] }}</td>
-        <td>{{ appointment['date'] }}</td>
-        <td>{{ appointment['time'] }}</td>
-        <td>{{ appointment['reason'] }}</td>
-        <td>{{ appointment['status'] }}</td>
-    </tr>
-    {% endfor %}
-</table>
-<a href="/">Back to Dashboard</a>
+    <header>
+        <h1>Appointments</h1>
+        <nav>
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('patients') }}">Patients</a>
+            <a href="{{ url_for('doctors') }}">Doctors</a>
+            <a href="{{ url_for('records') }}">Records</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Appointment Schedule</h2>
+        <table>
+            <tr>
+                <th>ID</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Time</th>
+            </tr>
+            {% for row in appointments %}
+            <tr>
+                <td>{{ row['appointment_id'] }}</td>
+                <td>{{ row['patient_name'] }}</td>
+                <td>{{ row['doctor_name'] }}</td>
+                <td>{{ row['date'] }}</td>
+                <td>{{ row['time'] }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </main>
 </body>
 </html>
+
